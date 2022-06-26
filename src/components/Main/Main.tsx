@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef, FC } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "../../firebase";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../features/userSlice";
 import { useParams } from "react-router-dom";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useAuth } from "../../Hooks/useAuth";
@@ -10,14 +8,12 @@ import {
   MainWrapper,
   MainHeader,
   MainHeaderInfo,
-  MainHeaderIcons,
   MainContent,
   Message,
   MessageContent,
   OwnMessage,
-  MainContentInput,
 } from "./main.style";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar } from "@mui/material";
 import Footer from "./Footer";
 import { https, http } from "../../Helpers/linksDetectors";
 
@@ -25,7 +21,6 @@ const Main = () => {
   const currentUser = useAuth();
   const [random, setRandom] = useState(0);
   const { URLRoomID } = useParams<{ URLRoomID: string }>();
-  const { Recipient } = useParams<{ Recipient: string }>();
   const [messages, setMessages] = useState([]);
   const [randomChat, setRandomChat] = useState(0);
   const [roomName, setRoomName] = useState<string>("");

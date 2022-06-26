@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, FC } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
 import {
@@ -15,14 +15,12 @@ import {
   MainWrapper,
   MainHeader,
   MainHeaderInfo,
-  MainHeaderIcons,
   MainContent,
   Message,
   MessageContent,
   OwnMessage,
-  MainContentInput,
 } from "./main.style";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar } from "@mui/material";
 import Footer from "./Footer";
 
 const Direct = () => {
@@ -32,7 +30,6 @@ const Direct = () => {
   const { to } = useParams<{ to: any }>();
   const [roomName, setRoomName] = useState<string>("");
   const messageEndRef = useRef<null | HTMLDivElement>(null);
-  const [userData, setUserData] = useState<any>([]);
   const [toData, setToData] = useState<any>([]);
   const [lastMessageDate, setLastMessageDate] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -68,7 +65,6 @@ const Direct = () => {
           setLastMessageDate(tempDate);
           setToData(toData);
           setMessages(thisConversation);
-          setUserData(data);
           setLoading(false);
         }
       });

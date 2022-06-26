@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatItem, ChatItemInfo } from "./sidebar.style";
 import { Avatar } from "@mui/material";
-import { db } from "../../firebase";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SideChat = ({
   id,

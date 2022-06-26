@@ -1,8 +1,8 @@
-import { KeyboardEvent, useState, FC, useEffect } from "react";
+import { KeyboardEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { useAuth } from "../../Hooks/useAuth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { MainFooter, MainFooterInput } from "./main.style";
 import SendIcon from "@mui/icons-material/Send";
 import { IconButton } from "@mui/material";

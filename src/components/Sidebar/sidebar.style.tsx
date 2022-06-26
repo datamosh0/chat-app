@@ -5,7 +5,6 @@ const SidebarWrapper = styled.div`
   background-color: white;
   flex-direction: column;
   border-right: 1px solid #e0e0e0;
-  height: 100%;
   grid-column: 2 / 2;
 
   .addButton {

@@ -3,9 +3,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { logout } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import { db } from "../../firebase";
-import { onSnapshot, query, collection, getDocs } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
-import { v4 as uuidv4 } from "uuid";
+import { query, collection, getDocs } from "firebase/firestore";
 import { useAuth } from "../../Hooks/useAuth";
 import DirectSearch from "./DirectSearch";
 
@@ -21,21 +19,16 @@ import {
   SidebarSearchInput,
 } from "./sidebar.style";
 import { Avatar, IconButton } from "@mui/material";
-import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
-import SideChat from "./SideChat";
 import PublicIcon from "@mui/icons-material/Public";
 import EmailIcon from "@mui/icons-material/Email";
 import SearchIcon from "@mui/icons-material/Search";
-import { SettingsInputSvideoRounded } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const IconBtn: any = IconButton;
 
 const DirectSidebar = (): JSX.Element => {
-  const [contactsObj, setContactsObj] = useState<any[]>([]);
-  const [searchObj, setSearchObj] = useState<any[]>([]);
   const currentUser = useAuth();
   const inputElement = useRef<null | HTMLInputElement>(null);
   const roomStart = useRef<HTMLDivElement>(null);
@@ -109,10 +102,11 @@ const DirectSidebar = (): JSX.Element => {
       setInitUsers(users);
       setUserData(result);
       setLoading(false);
+      scrollToBottom();
     };
 
     subscribeDirect();
-  }, [userData]);
+  }, [userData, uid]);
 
   const scrollToBottom = (): void => {
     roomStart?.current?.scrollIntoView({
@@ -188,24 +182,27 @@ const DirectSidebar = (): JSX.Element => {
       {!loading ? (
         <SidebarChat>
           <div ref={roomStart}></div>
-          {latestMessages.map((message: any) => {
-            let toInfo = initUsers.filter((user) => user.id === message.to)[0];
-            return (
-              <DirectSearch
-                key={message.email}
-                id={message.id}
-                lastMessage={message}
-                name={toInfo.displayName}
-                link={"/direct/" + currentUser.uid + "/" + message.to}
-              ></DirectSearch>
-            );
-          })}{" "}
+          {latestMessages.length === 0 ? (
+            <SidebarChat>There is no messages</SidebarChat>
+          ) : (
+            latestMessages.map((message: any) => {
+              let toInfo = initUsers.filter(
+                (user) => user.id === message.to
+              )[0];
+              return (
+                <DirectSearch
+                  key={message.email}
+                  id={message.id}
+                  lastMessage={message}
+                  name={toInfo.displayName}
+                  link={"/direct/" + currentUser.uid + "/" + message.to}
+                ></DirectSearch>
+              );
+            })
+          )}
         </SidebarChat>
       ) : (
         <SidebarChat>Loading...</SidebarChat>
-      )}
-      {latestMessages.length === 0 && (
-        <SidebarChat>There is no rooms</SidebarChat>
       )}
 
       <SidebarMenu>

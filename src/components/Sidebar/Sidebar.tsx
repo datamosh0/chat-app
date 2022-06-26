@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { logout } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import { db } from "../../firebase";
-import { onSnapshot, query, collection, getDocs } from "firebase/firestore";
+import { onSnapshot, query, collection } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../../Hooks/useAuth";
@@ -15,8 +15,6 @@ import {
   SidebarHeaderName,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarSearch,
-  SidebarSearchInput,
   SidebarHeaderIcons,
 } from "./sidebar.style";
 import { Avatar, IconButton } from "@mui/material";
@@ -37,6 +35,7 @@ const Sidebar = (): JSX.Element => {
 
   const createChat = (): void => {
     const roomName = prompt("Please enter name of new chat room");
+    if (roomName === "") return;
     if (roomName && roomName.length <= 15) {
       const roomRef = doc(db, "rooms", roomName);
       setDoc(roomRef, { roomID: uuidv4() });
