@@ -90,7 +90,7 @@ const DirectSidebar = (): JSX.Element => {
         conversations.push(arr);
       });
       let latestMessagePerConversation: any = [];
-      conversations.forEach((conversation: any, index: any) => {
+      conversations.forEach((conversation: any) => {
         if (conversation[conversation.length - 1] === undefined) return;
         latestMessagePerConversation.push(
           conversation[conversation.length - 1]
@@ -186,16 +186,21 @@ const DirectSidebar = (): JSX.Element => {
             <SidebarChat>There is no messages</SidebarChat>
           ) : (
             latestMessages.map((message: any) => {
+              let messageFlag: any;
+              if (message.to === currentUser.uid) messageFlag = message.from;
+              else messageFlag = message.to;
+
               let toInfo = initUsers.filter(
-                (user) => user.id === message.to
+                (user) => user.id === messageFlag
               )[0];
+
               return (
                 <DirectSearch
                   key={message.email}
                   id={message.id}
                   lastMessage={message}
                   name={toInfo.displayName}
-                  link={"/direct/" + currentUser.uid + "/" + message.to}
+                  link={"/direct/" + currentUser.uid + "/" + messageFlag}
                 ></DirectSearch>
               );
             })
@@ -212,7 +217,7 @@ const DirectSidebar = (): JSX.Element => {
           </SidebarMenuItem>
         </Link>
         <Link to={`/direct/${currentUser.uid}`}>
-          <SidebarMenuItem>
+          <SidebarMenuItem style={{ background: "#ccc" }}>
             <EmailIcon />
           </SidebarMenuItem>
         </Link>

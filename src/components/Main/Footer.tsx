@@ -10,7 +10,13 @@ import { IconButton } from "@mui/material";
 const IconBtn: any = IconButton;
 const MainInput: any = MainFooterInput;
 
-const Footer = ({ roomName, messages, toData }: any) => {
+const Footer = ({
+  roomName,
+  messages,
+  toData,
+  setChangeFlag,
+  changeFlag,
+}: any) => {
   const currentUser = useAuth();
   const [input, setInputValue] = useState("");
   const { URLRoomID } = useParams<{ URLRoomID: string }>();
@@ -71,14 +77,13 @@ const Footer = ({ roomName, messages, toData }: any) => {
       uid: toData.uid,
       messageHistory: [...toData.messageHistory, newMessage],
     };
-    console.log(recipientInfo);
     await setDoc(doc(db, "direct", uid), {
       ...userInfo,
     });
     await setDoc(doc(db, "direct", to), {
       ...recipientInfo,
     });
-
+    setChangeFlag(!changeFlag);
     setInputValue("");
   };
 

@@ -34,20 +34,15 @@ const Sidebar = (): JSX.Element => {
   const navigate = useNavigate();
 
   const createChat = (): void => {
-    const roomName = prompt("Please enter name of new chat room");
+    const roomName: any = prompt("Please enter name of new chat room");
     if (roomName === "") return;
-    if (roomName && roomName.length <= 15) {
+    if (roomName.length >= 20) {
+      alert("Please enter a roomname with less than 20 characters");
+      return;
+    }
+    if (roomName && roomName.length <= 20) {
       const roomRef = doc(db, "rooms", roomName);
       setDoc(roomRef, { roomID: uuidv4() });
-    } else if (typeof roomName === "string") {
-      if (roomName.trim().length === 0) {
-        alert("Please provide room name");
-        return;
-      }
-    } else {
-      alert(
-        "Room name is too long, you can provide maximum 15 characters. Try again"
-      );
     }
   };
 
@@ -122,7 +117,7 @@ const Sidebar = (): JSX.Element => {
       </SidebarChat>
       <SidebarMenu>
         <Link to={`/`}>
-          <SidebarMenuItem>
+          <SidebarMenuItem style={{ background: "#ccc" }}>
             <PublicIcon />
           </SidebarMenuItem>
         </Link>

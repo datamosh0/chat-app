@@ -34,6 +34,7 @@ const Direct = () => {
   const [lastMessageDate, setLastMessageDate] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
   const [messageHistory, setMessageHistory] = useState<any>();
+  const [changeFlag, setChangeFlag] = useState<boolean>();
   const randomNum: number = Math.random() * 2000;
   const UsersAvatars = `https://avatars.dicebear.com/api/human/${randomNum}.svg`;
 
@@ -76,7 +77,7 @@ const Direct = () => {
   useEffect(() => {
     setMessages([]);
     getToData();
-  }, [to]);
+  }, [to, changeFlag]);
 
   const scrollToBottom = () => {
     if (messageEndRef) {
@@ -88,6 +89,7 @@ const Direct = () => {
     } else return;
   };
   useEffect(scrollToBottom, [messages]);
+  console.log(to);
   return (
     <MainWrapper>
       <MainHeader>
@@ -128,7 +130,13 @@ const Direct = () => {
         )}
         <div ref={messageEndRef}></div>
       </MainContent>
-      <Footer roomName={roomName} messages={messageHistory} toData={toData} />
+      <Footer
+        roomName={roomName}
+        messages={messageHistory}
+        toData={toData}
+        setChangeFlag={setChangeFlag}
+        changeFlag={changeFlag}
+      />
     </MainWrapper>
   );
 };

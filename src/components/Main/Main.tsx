@@ -139,7 +139,13 @@ const Main = () => {
             </>
             <div ref={messageEndRef}></div>
           </MainContent>
-          <Footer roomName={roomName} messages={messages} toData={null} />
+          <Footer
+            roomName={roomName}
+            messages={messages}
+            toData={null}
+            setChangeFlag={null}
+            changeFlag={null}
+          />
         </div>
       )}
     </MainWrapper>
