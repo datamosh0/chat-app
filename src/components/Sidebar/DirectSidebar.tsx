@@ -202,8 +202,12 @@ const DirectSidebar = (): JSX.Element => {
           })}{" "}
         </SidebarChat>
       ) : (
-        <SidebarChat>There is no messages yet</SidebarChat>
+        <SidebarChat>Loading...</SidebarChat>
       )}
+      {latestMessages.length === 0 && (
+        <SidebarChat>There is no rooms</SidebarChat>
+      )}
+
       <SidebarMenu>
         <Link to={`/`}>
           <SidebarMenuItem>
