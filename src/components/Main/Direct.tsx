@@ -89,7 +89,7 @@ const Direct = () => {
     } else return;
   };
   useEffect(scrollToBottom, [messages]);
-  console.log(to);
+
   return (
     <MainWrapper>
       <MainHeader>

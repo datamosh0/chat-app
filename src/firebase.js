@@ -15,9 +15,4 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
-const f = async () => {
-  await deleteDoc(doc(db, "rooms", "Fir"));
-};
-
-f();
 export { auth, app, provider, db };

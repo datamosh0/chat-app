@@ -6,6 +6,8 @@ const SidebarWrapper = styled.div`
   flex-direction: column;
   border-right: 1px solid #e0e0e0;
   grid-column: 2 / 2;
+  height: 100%;
+  max-height: 80vh;
 
   .addButton {
     :hover,
@@ -96,7 +98,6 @@ const SidebarChat = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto;
   padding: 1rem;
   height: 100%;
 `;
@@ -107,10 +108,6 @@ const ChatItem = styled.div`
   margin: 10px 0;
   align-items: center;
   justify-content: space-between;
-  overflow: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const ChatItemInfo = styled.div`
@@ -124,7 +121,6 @@ const ChatItemInfo = styled.div`
   & > p {
     font-size: 0.9rem;
     color: darkgray;
-    overflow: hidden;
     max-height: 5vh;
     display: inline-block;
     word-break: break-word;

@@ -33,61 +33,13 @@ a {
   width: 100%;
 }
 
-.active {
-  transform: translateY(20px) !important;
-  opacity: 1 !important;
-  pointer-events: visible !important;
-}
-
-.rta {
-  flex: 1;
-  margin-left: 5px;
-}
-
-.rta__autocomplete {
-  position: absolute;
-  width: 300px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.rta__autocomplete ul {
-  list-style: none;
-  text-align: left;
-  margin-bottom: 0;
-}
-
-.rta__autocomplete li {
-  margin-bottom: 5px;
-  padding: 3px 20px;
-  cursor: pointer;
-}
-
-.rta__autocomplete li:hover {
-  background-color: skyblue;
-}
-
-input[type="text"].message-input,
-textarea.message-input {
-  flex-grow: 1;
-  border-radius: 0;
-  border: none;
-  color: #333;
-  overflow-y: hidden;
-  width: 100%;
-  resize: none;
-  overflow-y: scroll;
-  margin-left: 5px;
-}
-
 .App {
   display: grid;
   place-items: center;
   min-height: 100vh;
   padding: 2rem 0;
   width: 90%;
-  min-height: 75vh;
+  min-height: 80vh;
   margin-left: 5%;
 }
 
@@ -96,7 +48,6 @@ textarea.message-input {
   min-width: 90%;
   max-width: 1100px;
   height: 100%;
-
   box-shadow: -1px 4px 20px -6px rgba(0, 0, 0, 0.5);
   position: relative;
 }

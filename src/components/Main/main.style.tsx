@@ -2,12 +2,13 @@ import styled from "styled-components";
 
 const MainWrapper = styled.main`
   display: flex;
-  flex: 1;
   background-color: white;
   flex-direction: column;
+  max-height: 80vh;
   @media and screen (max-width: 768px) {
     flex: 0.65;
   }
+  overflow: hidden;
 `;
 
 const MainHeader = styled.div`
@@ -71,7 +72,7 @@ const MainContent = styled.div`
   min-height: 60vh;
   justify-content: flex-start;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: hidden;
 `;
 const MainFooter = styled.form`
   display: flex;

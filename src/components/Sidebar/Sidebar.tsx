@@ -46,14 +46,14 @@ const Sidebar = (): JSX.Element => {
     }
   };
 
-  const scrollToBottom = (): void => {
-    roomStart?.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
-  };
-  useEffect(scrollToBottom, [contactsObj]);
+  // const scrollToBottom = (): void => {
+  //   roomStart?.current?.scrollIntoView({
+  //     behavior: "smooth",
+  //     block: "end",
+  //     inline: "nearest",
+  //   });
+  // };
+  // useEffect(scrollToBottom, [contactsObj]);
 
   const logOut = (): void => {
     dispatch(logout());
