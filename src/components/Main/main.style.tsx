@@ -8,7 +8,6 @@ const MainWrapper = styled.main`
   @media and screen (max-width: 768px) {
     flex: 0.65;
   }
-  overflow: hidden;
 `;
 
 const MainHeader = styled.div`
@@ -72,7 +71,7 @@ const MainContent = styled.div`
   min-height: 60vh;
   justify-content: flex-start;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 `;
 const MainFooter = styled.form`
   display: flex;

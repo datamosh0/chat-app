@@ -46,7 +46,7 @@ const DirectSidebar = (): JSX.Element => {
     setSearchingAccounts(true);
   };
 
-  const searchFunction = async (e: any) => {
+  const searchFunction = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     let input = inputElement.current?.value;
 
     let tempUsers: any[] = [];
@@ -102,19 +102,10 @@ const DirectSidebar = (): JSX.Element => {
       setInitUsers(users);
       setUserData(result);
       setLoading(false);
-      scrollToBottom();
     };
 
     subscribeDirect();
   }, [userData, uid]);
-
-  const scrollToBottom = (): void => {
-    roomStart?.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
-  };
 
   const logOut = (): void => {
     dispatch(logout());

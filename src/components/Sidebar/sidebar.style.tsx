@@ -8,7 +8,6 @@ const SidebarWrapper = styled.div`
   grid-column: 2 / 2;
   height: 100%;
   max-height: 80vh;
-
   .addButton {
     :hover,
     :active {

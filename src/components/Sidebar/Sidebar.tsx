@@ -3,7 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { logout } from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import { db } from "../../firebase";
-import { onSnapshot, query, collection } from "firebase/firestore";
+import {
+  onSnapshot,
+  query,
+  collection,
+  DocumentData,
+  DocumentReference,
+  Query,
+} from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../../Hooks/useAuth";
@@ -46,15 +53,6 @@ const Sidebar = (): JSX.Element => {
     }
   };
 
-  // const scrollToBottom = (): void => {
-  //   roomStart?.current?.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "end",
-  //     inline: "nearest",
-  //   });
-  // };
-  // useEffect(scrollToBottom, [contactsObj]);
-
   const logOut = (): void => {
     dispatch(logout());
     navigate("/");
@@ -63,7 +61,7 @@ const Sidebar = (): JSX.Element => {
   const subscribeGlobal = (q: any) => {
     const unsubscribeRooms = onSnapshot(q, (querySnapshot: any) => {
       const rooms: any[] = [];
-      querySnapshot.forEach((doc: { data: () => any; id: any }) => {
+      querySnapshot.forEach((doc: { data: () => any; id: string }) => {
         const data = doc.data();
         const temp = { ...data, roomName: doc.id };
         rooms.push(temp);

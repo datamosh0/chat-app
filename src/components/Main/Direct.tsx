@@ -8,8 +8,12 @@ import {
   onSnapshot,
   doc,
   getDoc,
+  QueryDocumentSnapshot,
+  DocumentData,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import { useAuth } from "../../Hooks/useAuth";
+import LinkChecker from "./LinkChecker";
 
 import {
   MainWrapper,
@@ -26,25 +30,26 @@ import Footer from "./Footer";
 const Direct = () => {
   const currentUser = useAuth();
   const [messages, setMessages] = useState([]);
-  const { uid } = useParams<{ uid: any }>();
+  const { uid } = useParams<{ uid: string | undefined }>();
   const { to } = useParams<{ to: any }>();
   const [roomName, setRoomName] = useState<string>("");
-  const messageEndRef = useRef<null | HTMLDivElement>(null);
   const [toData, setToData] = useState<any>([]);
   const [lastMessageDate, setLastMessageDate] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
   const [messageHistory, setMessageHistory] = useState<any>();
   const [changeFlag, setChangeFlag] = useState<boolean>();
+  const messageEndRef = useRef<null | HTMLDivElement>(null);
+
   const randomNum: number = Math.random() * 2000;
   const UsersAvatars = `https://avatars.dicebear.com/api/human/${randomNum}.svg`;
 
   const getToData = async () => {
     const docRef = doc(db, "direct", to);
-    const docSnap: any = await getDoc(docRef);
+    const docSnap: DocumentSnapshot<DocumentData> = await getDoc(docRef);
 
     const q = query(collection(db, "direct"), where("uid", "==", uid));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      querySnapshot.forEach((doc: any) => {
+      querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         if (docSnap.exists()) {
           let toData = docSnap.data();
           let data = doc.data();
@@ -57,7 +62,7 @@ const Direct = () => {
           }
 
           let thisConversation: any = [];
-          data.messageHistory.forEach((message: any) => {
+          data.messageHistory.forEach((message: { to: any; from: any }) => {
             if (message.to === toData.uid || message.from === toData.uid) {
               thisConversation.push(message);
             }
@@ -113,7 +118,7 @@ const Direct = () => {
               if (from === currentUser.uid) {
                 return (
                   <OwnMessage key={from + message + timestamp}>
-                    <MessageContent>{message}</MessageContent>
+                    <LinkChecker message={message} />
                     <Avatar src={`${currentUser.photoURL}`} />
                   </OwnMessage>
                 );
@@ -121,7 +126,7 @@ const Direct = () => {
                 return (
                   <Message key={from + message + timestamp}>
                     <Avatar src={UsersAvatars} />
-                    <MessageContent>{message}</MessageContent>
+                    <LinkChecker message={message} />
                   </Message>
                 );
               }

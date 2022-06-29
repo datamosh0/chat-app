@@ -3,6 +3,7 @@ import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useAuth } from "../../Hooks/useAuth";
+import LinkChecker from "./LinkChecker";
 
 import {
   MainWrapper,
@@ -15,7 +16,6 @@ import {
 } from "./main.style";
 import { Avatar } from "@mui/material";
 import Footer from "./Footer";
-import { https, http } from "../../Helpers/linksDetectors";
 
 const Main = () => {
   const currentUser = useAuth();
@@ -25,8 +25,9 @@ const Main = () => {
   const [randomChat, setRandomChat] = useState(0);
   const [roomName, setRoomName] = useState<string>("");
   const [lastMessageDate, setLastMessageDate] = useState("");
-  const RandomAvatar = 3000;
   const messageEndRef = useRef<null | HTMLDivElement>(null);
+
+  const RandomAvatar = 3000;
   const RoomAvatar = `https://avatars.dicebear.com/api/human/${random}.svg`;
   const UsersAvatars = `https://avatars.dicebear.com/api/human/${randomChat}.svg`;
 
@@ -67,14 +68,6 @@ const Main = () => {
   };
   useEffect(scrollToBottom, [messages]);
 
-  const handleLinks = (message: string): boolean => {
-    if (message.includes(https) || message.includes(http)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   return (
     <MainWrapper>
       {URLRoomID && (
@@ -99,19 +92,7 @@ const Main = () => {
                 if (email === currentUser.email) {
                   return (
                     <OwnMessage key={message + timestamp}>
-                      <MessageContent>
-                        {handleLinks(message) ? (
-                          <a
-                            href={message}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {message}
-                          </a>
-                        ) : (
-                          message
-                        )}
-                      </MessageContent>
+                      <LinkChecker message={message} />
                       <Avatar src={`${currentUser.photoURL}`} />
                     </OwnMessage>
                   );
@@ -119,19 +100,7 @@ const Main = () => {
                   return (
                     <Message key={message + timestamp}>
                       <Avatar src={UsersAvatars} />
-                      <MessageContent>
-                        {handleLinks(message) ? (
-                          <a
-                            href={message}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {message}
-                          </a>
-                        ) : (
-                          message
-                        )}
-                      </MessageContent>
+                      <LinkChecker message={message} />
                     </Message>
                   );
                 }

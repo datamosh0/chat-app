@@ -17,6 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f0f0f0;
+  padding: 2rem 0;
   height: 100vh;
   display: grid;
   align-items: center;
