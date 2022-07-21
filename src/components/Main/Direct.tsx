@@ -21,54 +21,59 @@ import {
   MainHeaderInfo,
   MainContent,
   Message,
-  MessageContent,
   OwnMessage,
 } from "./main.style";
 import { Avatar } from "@mui/material";
 import Footer from "./Footer";
 
 const Direct = () => {
-  const currentUser = useAuth();
-  const [messages, setMessages] = useState([]);
-  const { uid } = useParams<{ uid: string | undefined }>();
-  const { to } = useParams<{ to: any }>();
-  const [roomName, setRoomName] = useState<string>("");
-  const [toData, setToData] = useState<any>([]);
+  const currentUser: User = useAuth();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { uid } = useParams<{ uid: string }>();
+  const { to } = useParams<string>();
+  const [toData, setToData] = useState<DocumentData>();
   const [lastMessageDate, setLastMessageDate] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [messageHistory, setMessageHistory] = useState<any>();
+  const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   const [changeFlag, setChangeFlag] = useState<boolean>();
   const [avatarURL, setAvatarURL] = useState<string>("");
   const messageEndRef = useRef<null | HTMLDivElement>(null);
 
   const getToData = async () => {
-    const docRef = doc(db, "direct", to);
+    const docRef = doc(db, "direct", `${to}`);
     const docSnap: DocumentSnapshot<DocumentData> = await getDoc(docRef);
 
-    const q = query(collection(db, "direct"), where("uid", "==", uid));
+    const q = query(collection(db, "direct"), where("uid", "==", `${uid}`));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         if (docSnap.exists()) {
           let toData = docSnap.data();
           let data = doc.data();
           let tempDate;
-          for (let i = messageHistory.length - 1; i >= 0; i--) {
+          for (let i: number = messageHistory!.length - 1; i >= 0; i--) {
             if (
-              messageHistory[i].from === currentUser.uid ||
-              messageHistory[i].to === currentUser.uid
+              messageHistory![i].from === currentUser.uid ||
+              messageHistory![i].to === currentUser.uid
             ) {
-              tempDate = messageHistory[i].timestamp;
+              tempDate = messageHistory![i].timestamp;
               break;
             }
           }
           if (!tempDate) tempDate = "";
 
-          let thisConversation: any = [];
-          data.messageHistory.forEach((message: { to: any; from: any }) => {
-            if (message.to === toData.uid || message.from === toData.uid) {
-              thisConversation.push(message);
+          let thisConversation: Message[] = [];
+          data.messageHistory.forEach(
+            (message: {
+              to: string;
+              from: string;
+              timestamp: string;
+              uid: string;
+            }) => {
+              if (message.to === toData.uid || message.from === toData.uid) {
+                thisConversation.push(message as Message);
+              }
             }
-          });
+          );
           const temp: string | null = localStorage.getItem(toData.displayName);
           const temp2 =
             temp !== null
@@ -104,7 +109,7 @@ const Direct = () => {
       });
     } else return;
   };
-  useEffect(scrollToBottom, [messages]);
+  useEffect(scrollToBottom, []);
 
   return (
     <MainWrapper>
@@ -113,7 +118,7 @@ const Direct = () => {
         <MainHeaderInfo>
           {!loading && (
             <>
-              <h1>{toData.displayName}</h1>
+              <h1>{toData!.displayName}</h1>
               <p>{lastMessageDate}</p>
             </>
           )}
@@ -147,7 +152,7 @@ const Direct = () => {
         <div ref={messageEndRef}></div>
       </MainContent>
       <Footer
-        roomName={roomName}
+        roomName={""}
         messages={messageHistory}
         toData={toData}
         setChangeFlag={setChangeFlag}

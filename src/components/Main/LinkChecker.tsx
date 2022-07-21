@@ -1,4 +1,3 @@
-import React from "react";
 import { https, http } from "../../Helpers/linksDetectors";
 import { MessageContent } from "./main.style";
 const LinkChecker = ({ message }: any) => {

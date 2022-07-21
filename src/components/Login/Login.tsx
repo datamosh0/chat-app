@@ -1,9 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { login } from "../../features/userSlice";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../firebase";
-import { useNavigate, Link } from "react-router-dom";
-import Policy from "../Policy/Policy";
+import { useNavigate } from "react-router-dom";
 import { LogoWrapper, LogoHeader, LogoImage, LogoButton } from "./login.style";
 import "../../index.css";
 
@@ -15,7 +14,12 @@ function Login() {
       let result = await signInWithPopup(auth, provider);
       const user = result.user;
       const { email, displayName, photoURL, uid } = user!;
-      const newuser: User = { email, displayName, photoURL, uid };
+      const newuser: NewUser = {
+        email,
+        displayName,
+        photoURL,
+        uid,
+      };
       dispatch(login(newuser));
       navigate("/");
     } catch (e) {
@@ -29,7 +33,7 @@ function Login() {
           <LogoImage />
           <LogoHeader>Log into Chatter</LogoHeader>
           <LogoButton onClick={handleClick}>Log in with Google</LogoButton>
-          <Policy></Policy>
+          {/* <Policy></Policy> */}
         </LogoWrapper>
       </div>
     </div>

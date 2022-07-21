@@ -8,7 +8,6 @@ import {
   query,
   collection,
   DocumentData,
-  DocumentReference,
   Query,
 } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
@@ -34,16 +33,19 @@ import EmailIcon from "@mui/icons-material/Email";
 const IconBtn: any = IconButton;
 
 const Sidebar = (): JSX.Element => {
-  const [contactsObj, setContactsObj] = useState<any[]>([]);
-  const currentUser = useAuth();
+  const [contacts, setContacts] = useState<Room[]>();
+  const currentUser: User = useAuth();
   const roomStart = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const createChat = (): void => {
-    const roomName: any = prompt("Please enter name of new chat room");
+    const roomName: string | null = prompt(
+      "Please enter name of new chat room"
+    );
     if (roomName === "") return;
-    if (roomName.length >= 20) {
+    if (roomName!.length >= 20) {
       alert("Please enter a roomname with less than 20 characters");
       return;
     }
@@ -58,29 +60,29 @@ const Sidebar = (): JSX.Element => {
     navigate("/");
   };
 
-  const subscribeGlobal = (q: any) => {
-    const unsubscribeRooms = onSnapshot(q, (querySnapshot: any) => {
-      const rooms: any[] = [];
-      querySnapshot.forEach((doc: { data: () => any; id: string }) => {
+  const subscribeGlobal = () => {
+    const q: Query<DocumentData> = query(collection(db, "rooms"));
+    const unsubscribeRooms = onSnapshot(q, (querySnapshot: DocumentData) => {
+      const rooms: Room[] = [];
+      querySnapshot.forEach((doc: { data: () => DocumentData; id: string }) => {
         const data = doc.data();
-        const temp = { ...data, roomName: doc.id };
+        const temp: Room = {
+          roomID: data.roomID,
+          roomName: data.roomName,
+          messageHistory: data.messageHistory,
+        };
         rooms.push(temp);
       });
-      setContactsObj(
-        rooms.map((doc) => ({
-          id: doc.roomID,
-          name: doc.roomName,
-          messageHistory: doc.messageHistory,
-        }))
-      );
+      console.log(rooms);
+      setContacts(rooms);
+      setLoading(false);
     });
     return () => unsubscribeRooms();
   };
 
   useEffect(() => {
-    setContactsObj([]);
-    const q = query(collection(db, "rooms"));
-    subscribeGlobal(q);
+    setContacts([]);
+    subscribeGlobal();
   }, []);
 
   return (
@@ -98,21 +100,22 @@ const Sidebar = (): JSX.Element => {
         <AddCircleIcon />
       </IconBtn>
 
-      <SidebarChat>
-        <div ref={roomStart}></div>
-        {contactsObj.length >= 1
-          ? contactsObj.map((room) => (
-              <SideChat
-                key={room.id}
-                id={room.id}
-                name={room.name}
-                messageHistory={room.messageHistory}
-                link={"/rooms/" + room.id}
-                timestamp={new Date()}
-              />
-            ))
-          : "There is no rooms yet"}
-      </SidebarChat>
+      <div ref={roomStart}></div>
+      {!loading && (
+        <SidebarChat>
+          {contacts!.length >= 1
+            ? contacts!.map((room: Room) => (
+                <SideChat
+                  key={room.roomID}
+                  id={room.roomID}
+                  name={room.roomName}
+                  messageHistory={room.messageHistory}
+                  link={"/rooms/" + room.roomID}
+                />
+              ))
+            : "There is no rooms yet"}
+        </SidebarChat>
+      )}
       <SidebarMenu>
         <Link to={`/`}>
           <SidebarMenuItem style={{ background: "#ccc" }}>

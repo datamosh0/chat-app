@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { doc, deleteDoc } from "firebase/firestore";
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -15,8 +14,4 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
-// const func = async () => {
-//   await deleteDoc(doc(db, "direct", "RYxJDubGOoQtlvWsBn1WF3T1a642"));
-// };
-// func();
 export { auth, app, provider, db };

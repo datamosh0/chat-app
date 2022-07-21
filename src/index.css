@@ -17,8 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f0f0f0;
-  padding: 2rem 0;
-  height: 100vh;
+  min-height: 100vh;
   display: grid;
   align-items: center;
 }
@@ -37,15 +36,15 @@ a {
 .App {
   display: grid;
   place-items: center;
-  min-height: 100vh;
   padding: 2rem 0;
   width: 90%;
-  min-height: 80vh;
+  min-height: 78vh;
   margin-left: 5%;
 }
 
 .App__wrapper {
   background-color: #ededed;
+  min-height: 78vh;
   min-width: 90%;
   max-width: 1100px;
   height: 100%;

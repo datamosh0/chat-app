@@ -2,7 +2,7 @@ import { KeyboardEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { useAuth } from "../../Hooks/useAuth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, DocumentData, setDoc } from "firebase/firestore";
 import { MainFooter, MainFooterInput } from "./main.style";
 import SendIcon from "@mui/icons-material/Send";
 import { IconButton } from "@mui/material";
@@ -16,12 +16,18 @@ const Footer = ({
   toData,
   setChangeFlag,
   changeFlag,
-}: any) => {
+}: {
+  roomName: string;
+  messages?: Message[];
+  toData?: DocumentData;
+  setChangeFlag: (value: boolean) => void;
+  changeFlag?: boolean;
+}) => {
   const currentUser = useAuth();
   const [input, setInputValue] = useState("");
   const { URLRoomID } = useParams<{ URLRoomID: string }>();
-  const { to } = useParams<{ to: any }>();
-  const { uid } = useParams<{ uid: any }>();
+  const { to } = useParams<{ to: string }>();
+  const { uid } = useParams<{ uid: string }>();
 
   const handleKeyPress = (e: KeyboardEvent<HTMLFormElement>): void => {
     if (e.key === "Enter") {
@@ -43,14 +49,15 @@ const Footer = ({
       uid: uid,
       message: input,
       timestamp: newDate,
-    };
-    tempMessages.push(newMessage);
+    } as unknown as Message;
+    tempMessages!.push(newMessage);
 
     await setDoc(doc(db, "rooms", roomName), {
       roomID: URLRoomID,
       messageHistory: tempMessages,
     });
 
+    setChangeFlag(!changeFlag);
     setInputValue("");
   };
 
@@ -64,23 +71,22 @@ const Footer = ({
       message: input,
       timestamp: newDate,
     };
-
     const userInfo = {
       email: currentUser.email,
       displayName: currentUser.displayName,
       uid: currentUser.uid,
-      messageHistory: [...messages, newMessage],
+      messageHistory: [...messages!, newMessage],
     };
     const recipientInfo = {
-      email: toData.email,
-      displayName: toData.displayName,
-      uid: toData.uid,
-      messageHistory: [...toData.messageHistory, newMessage],
+      email: toData!.email,
+      displayName: toData!.displayName,
+      uid: toData!.uid,
+      messageHistory: [...toData!.messageHistory, newMessage],
     };
-    await setDoc(doc(db, "direct", uid), {
+    await setDoc(doc(db, "direct", `${uid}`), {
       ...userInfo,
     });
-    await setDoc(doc(db, "direct", to), {
+    await setDoc(doc(db, "direct", `${to}`), {
       ...recipientInfo,
     });
     setChangeFlag(!changeFlag);

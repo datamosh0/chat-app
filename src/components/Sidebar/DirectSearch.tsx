@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
 import { ChatItem, ChatItemInfo } from "./sidebar.style";
 import { Avatar } from "@mui/material";
-import { db } from "../../firebase";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const DirectSearch = ({ name, lastMessage, link }: any): JSX.Element => {
+const DirectSearch = ({
+  name,
+  lastMessage,
+  link,
+}: {
+  name: string | null;
+  lastMessage: Message | undefined;
+  link?: string;
+}): JSX.Element => {
   const avatarURL = `https://avatars.dicebear.com/api/human/${Math.floor(
     Math.random() * 5000
   )}.svg`;
@@ -16,10 +22,14 @@ const DirectSearch = ({ name, lastMessage, link }: any): JSX.Element => {
         <Avatar src={avatarURL} />
         <ChatItemInfo>
           <h2>{name}</h2>
-          <div>
-            <p>{lastMessage.message}</p>
-            <p>{lastMessage.timestamp}</p>
-          </div>
+          {lastMessage ? (
+            <div>
+              <p>{lastMessage!.message}</p>
+              <p>{lastMessage!.timestamp}</p>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </ChatItemInfo>
       </ChatItem>
     </Link>

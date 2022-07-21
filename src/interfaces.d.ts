@@ -1,11 +1,28 @@
+interface Message {
+  from: ?string;
+  to: ?string;
+  message: string;
+  timestamp: string;
+  uid: ?string;
+  email: ?string;
+}
 interface Room {
   roomID: string;
-  data: firebase.firestore.DocumentData;
+  roomName: string;
+  messageHistory: Message[];
 }
 
 interface User {
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  uid: string | null;
+  email: ?string;
+  displayName: ?string;
+  photoURL: ?string;
+  uid: ?string;
+  messageHistory: ?Message[];
+}
+
+interface NewUser {
+  email: ?string;
+  displayName: ?string;
+  photoURL: ?string;
+  uid: ?string;
 }

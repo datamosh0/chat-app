@@ -17,6 +17,8 @@ import {
   SidebarMenuItem,
   SidebarSearch,
   SidebarSearchInput,
+  SidebarRemoveUser,
+  SidebarCenter,
 } from "./sidebar.style";
 import { Avatar, IconButton } from "@mui/material";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
@@ -31,12 +33,12 @@ const IconBtn: any = IconButton;
 const DirectSidebar = (): JSX.Element => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUser = useAuth();
+  const currentUser: User = useAuth();
   const inputElement = useRef<null | HTMLInputElement>(null);
   const roomStart = useRef<HTMLDivElement>(null);
   const { uid } = useParams<{ uid: string }>();
-  const [users, setUsers] = useState<any[]>([]);
-  const [initUsers, setInitUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [initUsers, setInitUsers] = useState<User[]>([]);
   const [searchingAccounts, setSearchingAccounts] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [latestMessages, setLatestMessages] = useState<any>();
@@ -44,13 +46,13 @@ const DirectSidebar = (): JSX.Element => {
   const searchFunction = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     let input = inputElement.current?.value;
 
-    let tempUsers: any[] = [];
+    let tempUsers: User[] = [];
     let usersToSearch = users;
     if (e.key === "Backspace") {
       usersToSearch = initUsers;
     }
     usersToSearch.forEach((user) => {
-      if (user.displayName.includes(input) || user.email.includes(input)) {
+      if (user.displayName!.includes(input!) || user.email!.includes(input!)) {
         tempUsers.push(user);
       }
     });
@@ -70,21 +72,21 @@ const DirectSidebar = (): JSX.Element => {
         users.push({
           displayName: data.displayName,
           email: data.email,
-          id: data.uid,
+          uid: data.uid,
           messageHistory: data.messageHistory,
         });
       });
 
-      const conversations: any = [];
+      const conversations: Message[] = [];
       users.forEach((user) => {
-        let thisID = user.id;
+        let thisID = user.uid;
         if (uid === thisID) return;
         let arr = result.messageHistory.filter(
-          (message: any) => message.to === thisID || message.from === thisID
+          (message: Message) => message.to === thisID || message.from === thisID
         );
         conversations.push(arr);
       });
-      let latestMessagePerConversation: any = [];
+      let latestMessagePerConversation: Message[] = [];
       conversations.forEach((conversation: any) => {
         if (conversation[conversation.length - 1] === undefined) return;
         latestMessagePerConversation.push(
@@ -96,7 +98,6 @@ const DirectSidebar = (): JSX.Element => {
       setUsers(users);
       setInitUsers(users);
       setLoading(false);
-      console.log(users);
     };
 
     subscribeDirect();
@@ -150,27 +151,25 @@ const DirectSidebar = (): JSX.Element => {
           </SidebarSearch>
           <SidebarChat>
             <div onClick={() => setSearchingAccounts(false)}>
-              {users.map((user) => {
-                let lastMessage;
-                let { email, displayName, messageHistory, id } = user;
-                if (id === currentUser.uid) return <></>;
-                for (let i = messageHistory.length - 1; i >= 0; i--) {
+              {users.map((user: User) => {
+                let lastMessage: Message;
+                let { email, displayName, messageHistory, uid } = user;
+                if (uid === currentUser.uid) return <></>;
+                for (let i = messageHistory!.length - 1; i >= 0; i--) {
                   if (
-                    messageHistory[i].from === currentUser.uid ||
-                    messageHistory[i].to === currentUser.uid
+                    messageHistory![i].from === currentUser.uid ||
+                    messageHistory![i].to === currentUser.uid
                   ) {
-                    lastMessage = messageHistory[i];
+                    lastMessage = messageHistory![i];
                     break;
                   }
                 }
-                if (!lastMessage) lastMessage = "";
                 return (
                   <DirectSearch
                     key={email}
-                    id={email}
                     name={displayName}
-                    lastMessage={lastMessage}
-                    link={"/direct/" + currentUser.uid + "/" + id}
+                    lastMessage={lastMessage!}
+                    link={"/direct/" + currentUser.uid + "/" + uid}
                   ></DirectSearch>
                 );
               })}
@@ -182,15 +181,15 @@ const DirectSidebar = (): JSX.Element => {
         <SidebarChat>
           <div ref={roomStart}></div>
           {latestMessages.length === 0 ? (
-            <SidebarChat>You have no= messages</SidebarChat>
+            <SidebarChat>You have no messages</SidebarChat>
           ) : (
-            latestMessages.map((message: any) => {
-              let messageFlag: any;
+            latestMessages.map((message: Message) => {
+              let messageFlag: string | null;
               if (message.to === currentUser.uid) messageFlag = message.from;
               else messageFlag = message.to;
 
               let toInfo = initUsers.filter(
-                (user) => user.id === messageFlag
+                (user) => user.uid === messageFlag
               )[0];
 
               return (

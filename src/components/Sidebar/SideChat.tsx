@@ -3,9 +3,19 @@ import { ChatItem, ChatItemInfo } from "./sidebar.style";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const SideChat = ({ id, name, messageHistory, link }: any): JSX.Element => {
-  const [lastMessage, setLastMessage] = useState<any>([]);
-  const [lastDate, setLastDate] = useState<any>([]);
+const SideChat = ({
+  id,
+  name,
+  messageHistory,
+  link,
+}: {
+  id: string;
+  name: string;
+  messageHistory: Message[];
+  link: string;
+}): JSX.Element => {
+  const [lastMessage, setLastMessage] = useState<string>();
+  const [lastDate, setLastDate] = useState<string>();
   const avatarURL = `https://avatars.dicebear.com/api/human/${id}.svg`;
   useEffect(() => {
     if (messageHistory) {
@@ -29,7 +39,7 @@ const SideChat = ({ id, name, messageHistory, link }: any): JSX.Element => {
                 <p>{lastDate}</p>
               </div>
             ) : (
-              <div></div>
+              <div>Empty Room</div>
             )}
           </div>
         </ChatItemInfo>

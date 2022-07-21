@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import store from "./app/store";
@@ -6,7 +5,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login/Login";
 import App from "./App";
-import Policy from "./components/Policy/Policy";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -48,7 +46,6 @@ root.render(
           }
         ></Route>
         <Route path="/login" element={<Login />}></Route>
-        <Route path="/policy" element={<Policy />}></Route>
       </Routes>
     </BrowserRouter>
   </Provider>

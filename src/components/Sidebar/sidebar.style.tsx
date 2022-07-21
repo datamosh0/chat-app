@@ -141,6 +141,20 @@ const SidebarMenu = styled.div`
   grid-template-columns: 1fr 1fr;
 `;
 
+const SidebarCenter = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+`;
+
+const SidebarRemoveUser = styled.button`
+  height: 2rem;
+  padding: 0 0.5rem;
+`;
+
 const SidebarMenuItem = styled.div`
   display: flex;
   justify-content: center;
@@ -163,4 +177,6 @@ export {
   SidebarHeaderName,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarRemoveUser,
+  SidebarCenter,
 };

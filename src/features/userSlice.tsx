@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const nullUser: User = {
+const nullUser: NewUser = {
   email: null,
   displayName: null,
   photoURL: null,
@@ -17,7 +17,7 @@ export const userSlice = createSlice({
     logout: (state: any) => {
       state.user = nullUser;
     },
-    login: (state: any, action: { payload: User }) => {
+    login: (state: any, action: { payload: NewUser }) => {
       state.synced = true;
       state.user = action.payload;
     },
