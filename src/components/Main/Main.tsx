@@ -22,9 +22,9 @@ const Main = () => {
   const [random, setRandom] = useState(0);
   const { URLRoomID } = useParams<{ URLRoomID: string }>();
   const [messages, setMessages] = useState([]);
-  const [randomChat, setRandomChat] = useState(0);
+  const [randomChat, setRandomChat] = useState<number>(0);
   const [roomName, setRoomName] = useState<string>("");
-  const [lastMessageDate, setLastMessageDate] = useState("");
+  const [lastMessageDate, setLastMessageDate] = useState<string>("");
   const messageEndRef = useRef<null | HTMLDivElement>(null);
 
   const RandomAvatar = 3000;

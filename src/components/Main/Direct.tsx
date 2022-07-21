@@ -38,10 +38,8 @@ const Direct = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [messageHistory, setMessageHistory] = useState<any>();
   const [changeFlag, setChangeFlag] = useState<boolean>();
+  const [avatarURL, setAvatarURL] = useState<string>("");
   const messageEndRef = useRef<null | HTMLDivElement>(null);
-
-  const randomNum: number = Math.random() * 2000;
-  const UsersAvatars = `https://avatars.dicebear.com/api/human/${randomNum}.svg`;
 
   const getToData = async () => {
     const docRef = doc(db, "direct", to);
@@ -54,12 +52,16 @@ const Direct = () => {
           let toData = docSnap.data();
           let data = doc.data();
           let tempDate;
-          if (data.messageHistory.length > 0) {
-            tempDate =
-              data.messageHistory[data.messageHistory.length - 1].timestamp;
-          } else {
-            tempDate = "";
+          for (let i = messageHistory.length - 1; i >= 0; i--) {
+            if (
+              messageHistory[i].from === currentUser.uid ||
+              messageHistory[i].to === currentUser.uid
+            ) {
+              tempDate = messageHistory[i].timestamp;
+              break;
+            }
           }
+          if (!tempDate) tempDate = "";
 
           let thisConversation: any = [];
           data.messageHistory.forEach((message: { to: any; from: any }) => {
@@ -67,6 +69,15 @@ const Direct = () => {
               thisConversation.push(message);
             }
           });
+          const temp: string | null = localStorage.getItem(toData.displayName);
+          const temp2 =
+            temp !== null
+              ? temp
+              : `https://avatars.dicebear.com/api/human/${Math.floor(
+                  Math.random() * 5000
+                )}.svg`;
+
+          setAvatarURL(JSON.parse(temp2));
           setMessageHistory(data.messageHistory);
           setLastMessageDate(tempDate);
           setToData(toData);
@@ -98,7 +109,7 @@ const Direct = () => {
   return (
     <MainWrapper>
       <MainHeader>
-        <Avatar src={UsersAvatars} />
+        <Avatar src={avatarURL} />
         <MainHeaderInfo>
           {!loading && (
             <>
@@ -125,7 +136,7 @@ const Direct = () => {
               } else {
                 return (
                   <Message key={from + message + timestamp}>
-                    <Avatar src={UsersAvatars} />
+                    <Avatar src={avatarURL} />
                     <LinkChecker message={message} />
                   </Message>
                 );

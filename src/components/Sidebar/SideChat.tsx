@@ -3,13 +3,7 @@ import { ChatItem, ChatItemInfo } from "./sidebar.style";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const SideChat = ({
-  id,
-  name,
-  messageHistory,
-  link,
-  timestamp,
-}: any): JSX.Element => {
+const SideChat = ({ id, name, messageHistory, link }: any): JSX.Element => {
   const [lastMessage, setLastMessage] = useState<any>([]);
   const [lastDate, setLastDate] = useState<any>([]);
   const avatarURL = `https://avatars.dicebear.com/api/human/${id}.svg`;

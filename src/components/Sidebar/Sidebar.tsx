@@ -53,7 +53,7 @@ const Sidebar = (): JSX.Element => {
     }
   };
 
-  const logOut = (): void => {
+  const logOut = () => {
     dispatch(logout());
     navigate("/");
   };

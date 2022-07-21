@@ -29,22 +29,17 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const IconBtn: any = IconButton;
 
 const DirectSidebar = (): JSX.Element => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const currentUser = useAuth();
   const inputElement = useRef<null | HTMLInputElement>(null);
   const roomStart = useRef<HTMLDivElement>(null);
-  const { uid }: any = useParams<{ uid: string }>();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { uid } = useParams<{ uid: string }>();
   const [users, setUsers] = useState<any[]>([]);
   const [initUsers, setInitUsers] = useState<any[]>([]);
-  const [searchingAccounts, setSearchingAccounts] = useState<any>(false);
-  const [userData, setUserData] = useState<any>([]);
+  const [searchingAccounts, setSearchingAccounts] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [latestMessages, setLatestMessages] = useState<any>();
-
-  const createChat = (): void => {
-    setSearchingAccounts(true);
-  };
 
   const searchFunction = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     let input = inputElement.current?.value;
@@ -100,14 +95,14 @@ const DirectSidebar = (): JSX.Element => {
       setLatestMessages(latestMessagePerConversation);
       setUsers(users);
       setInitUsers(users);
-      setUserData(result);
       setLoading(false);
+      console.log(users);
     };
 
     subscribeDirect();
-  }, [userData, uid]);
+  }, [uid]);
 
-  const logOut = (): void => {
+  const logOut = () => {
     dispatch(logout());
     navigate("/");
   };
@@ -124,7 +119,11 @@ const DirectSidebar = (): JSX.Element => {
         </SidebarHeaderIcons>
       </SidebarHeader>
       {!searchingAccounts ? (
-        <IconBtn onClick={createChat} className="addButton" label="Create room">
+        <IconBtn
+          onClick={() => setSearchingAccounts(true)}
+          className="addButton"
+          label="Create room"
+        >
           <AddCircleIcon />
         </IconBtn>
       ) : (
@@ -152,17 +151,26 @@ const DirectSidebar = (): JSX.Element => {
           <SidebarChat>
             <div onClick={() => setSearchingAccounts(false)}>
               {users.map((user) => {
-                if (user.id === currentUser.uid) return <></>;
-                let lastMessage =
-                  user.messageHistory[user.messageHistory.length - 1];
+                let lastMessage;
+                let { email, displayName, messageHistory, id } = user;
+                if (id === currentUser.uid) return <></>;
+                for (let i = messageHistory.length - 1; i >= 0; i--) {
+                  if (
+                    messageHistory[i].from === currentUser.uid ||
+                    messageHistory[i].to === currentUser.uid
+                  ) {
+                    lastMessage = messageHistory[i];
+                    break;
+                  }
+                }
                 if (!lastMessage) lastMessage = "";
                 return (
                   <DirectSearch
-                    key={user.email}
-                    id={user.email}
-                    name={user.displayName}
+                    key={email}
+                    id={email}
+                    name={displayName}
                     lastMessage={lastMessage}
-                    link={"/direct/" + currentUser.uid + "/" + user.id}
+                    link={"/direct/" + currentUser.uid + "/" + id}
                   ></DirectSearch>
                 );
               })}
@@ -174,7 +182,7 @@ const DirectSidebar = (): JSX.Element => {
         <SidebarChat>
           <div ref={roomStart}></div>
           {latestMessages.length === 0 ? (
-            <SidebarChat>There is no messages</SidebarChat>
+            <SidebarChat>You have no= messages</SidebarChat>
           ) : (
             latestMessages.map((message: any) => {
               let messageFlag: any;
@@ -188,7 +196,6 @@ const DirectSidebar = (): JSX.Element => {
               return (
                 <DirectSearch
                   key={message.email}
-                  id={message.id}
                   lastMessage={message}
                   name={toInfo.displayName}
                   link={"/direct/" + currentUser.uid + "/" + messageFlag}

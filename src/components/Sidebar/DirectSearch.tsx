@@ -4,12 +4,15 @@ import { Avatar } from "@mui/material";
 import { db } from "../../firebase";
 import { Link, useParams } from "react-router-dom";
 
-const DirectSearch = ({ id, name, lastMessage, link }: any): JSX.Element => {
-  const avatarURL = `https://avatars.dicebear.com/api/human/${id}.svg`;
+const DirectSearch = ({ name, lastMessage, link }: any): JSX.Element => {
+  const avatarURL = `https://avatars.dicebear.com/api/human/${Math.floor(
+    Math.random() * 5000
+  )}.svg`;
+  localStorage.setItem(`${name}`, JSON.stringify(avatarURL));
 
   return (
     <Link to={`${link}`}>
-      <ChatItem id={id}>
+      <ChatItem>
         <Avatar src={avatarURL} />
         <ChatItemInfo>
           <h2>{name}</h2>
